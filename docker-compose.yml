@@ -1,6 +1,15 @@
 version: '3.4'
 
 services:
+  web-app-lessons-api:
+    image: web-app-lessons-api
+    container_name: web-app-lessons-api
+    hostname: web-app-lessons-api
+    build:
+      context: .
+      dockerfile: WebAppLessonsApi/Dockerfile
+    ports:
+      - 5141:80
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq-lessons

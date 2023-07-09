@@ -15,6 +15,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<MessageBrokerOptions>>().Value);
         services.AddMassTransit(busConfigurator =>
         {
+            busConfigurator.SetKebabCaseEndpointNameFormatter();
             busConfigurator.AddConsumer<UserCreatedConsumer>();
             busConfigurator.AddConsumer<UserCreatedConsumer2>();
             busConfigurator.UsingRabbitMq((context, configurator) =>
@@ -27,11 +28,13 @@ public static class DependencyInjectionExtensions
                     hc.Password(massageBrokerOptions.Password);
                 });
                 
-                configurator.ReceiveEndpoint(massageBrokerOptions.UserCreatedQueueName, endpointConfig =>
-                {
-                    endpointConfig.ConfigureConsumer<UserCreatedConsumer>(context);
-                    endpointConfig.ConfigureConsumer<UserCreatedConsumer2>(context);
-                });
+                configurator.ConfigureEndpoints(context);
+                
+                // configurator.ReceiveEndpoint(massageBrokerOptions.UserCreatedQueueName, endpointConfig =>
+                // {
+                //     endpointConfig.ConfigureConsumer<UserCreatedConsumer>(context);
+                //     endpointConfig.ConfigureConsumer<UserCreatedConsumer2>(context);
+                // });
             });
             
            
